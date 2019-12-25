@@ -1,0 +1,28 @@
+{
+  "name": "hello-rsocket",
+  "description": "Hello RSocket",
+  "version": "0.0.1",
+  "author": {
+    "email": "feuyeux@gmail.com"
+  },
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/feuyeux/hello-rsocket-nodejs.git"
+  },
+  "dependencies": {
+    "fbjs": "^1.0.0",
+    "rsocket-core": "^0.0.18",
+    "rsocket-flowable": "^0.0.14",
+    "rsocket-tcp-server": "^0.0.18",
+    "rsocket-tcp-client": "^0.0.18",
+    "rsocket-types": "^0.0.16",
+    "rsocket-websocket-client": "^0.0.18",
+    "rsocket-websocket-server": "^0.0.18",
+    "ws": "^7.2.1",
+    "yargs": "^8.0.2"
+  },
+  "devDependencies": {
+    "cross-env": "^6.0.3"
+  }
+}
