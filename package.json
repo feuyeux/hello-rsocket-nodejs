@@ -3,6 +3,7 @@
   "description": "Hello RSocket",
   "version": "0.0.1",
   "author": {
+    "name": "feuyeux",
     "email": "feuyeux@gmail.com"
   },
   "license": "BSD-3-Clause",
@@ -12,7 +13,7 @@
   },
   "dependencies": {
     "fbjs": "^1.0.0",
-    "rsocket-core": "^0.0.18",
+    "rsocket-core": "file:../../github/rsocket-js/packages/rsocket-core",
     "rsocket-flowable": "^0.0.14",
     "rsocket-tcp-server": "^0.0.18",
     "rsocket-tcp-client": "^0.0.18",
