@@ -11,6 +11,7 @@
     "type": "git",
     "url": "https://github.com/feuyeux/hello-rsocket-nodejs.git"
   },
+  "main": "src/SimpleCli.js",
   "dependencies": {
     "fbjs": "^1.0.0",
     "rsocket-core": "file:../../github/rsocket-js/packages/rsocket-core",
@@ -23,7 +24,5 @@
     "ws": "^7.2.1",
     "yargs": "^8.0.2"
   },
-  "devDependencies": {
-    "cross-env": "^6.0.3"
-  }
+  "devDependencies": {}
 }

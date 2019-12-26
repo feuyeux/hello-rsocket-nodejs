@@ -1,7 +1,11 @@
 # hello-rsocket-nodejs
 
 ```bash
-node SimpleCli.js --mode=server --protocol=ws
+yarn install
+
+node src/SimpleCli.js --mode=server --protocol=ws
+
+node src/SimpleCli.js --protocol=ws
 ```
 
 
