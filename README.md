@@ -3,9 +3,9 @@
 ```bash
 yarn install
 
-node src/SimpleCli.js --mode=server --protocol=ws
-
-node src/SimpleCli.js --protocol=ws
+yarn run start-tcp-responder
+yarn run send-tcp-request
+node src/SimpleCli.js --mode=client --protocol=tcp --payload=你好
 ```
 
 

@@ -24,5 +24,12 @@
     "ws": "^7.2.1",
     "yargs": "^8.0.2"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "scripts": {
+    "simple-cli": "node src/SimpleCli.js \"$@\"",
+    "start-tcp-responder": "node src/SimpleCli.js --mode=server --protocol=tcp",
+    "start-ws-responder": "node src/SimpleCli.js --mode=server --protocol=ws",
+    "send-tcp-request": "node src/SimpleCli.js --protocol=tcp \"$@\"",
+    "send-ws-request": "node src/SimpleCli.js --protocol=ws \"$@\""
+  }
 }

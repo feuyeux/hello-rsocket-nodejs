@@ -1,20 +1,19 @@
 'use strict';
-const Deferred = interopRequireDefault(require('fbjs/lib/Deferred'));
+const Deferred = interopRequire(require('fbjs/lib/Deferred'));
 const rsocketCore = require('rsocket-core');
-
-const rsocketWebsocketServer = interopRequireDefault(require('rsocket-websocket-server'));
-const rsocketWebsocketClient = interopRequireDefault(require('rsocket-websocket-client'));
-const rsocketTcpServer = interopRequireDefault(require('rsocket-tcp-server'));
-const rsocketTcpClient = interopRequireDefault(require('rsocket-tcp-client'));
-const yargs = interopRequireDefault(require('yargs'));
-const ws = interopRequireDefault(require('ws'));
+const rsocketWebsocketServer = interopRequire(require('rsocket-websocket-server'));
+const rsocketWebsocketClient = interopRequire(require('rsocket-websocket-client'));
+const rsocketTcpServer = interopRequire(require('rsocket-tcp-server'));
+const rsocketTcpClient = interopRequire(require('rsocket-tcp-client'));
+const yargs = interopRequire(require('yargs'));
+const ws = interopRequire(require('ws'));
 const HelloRSocket = require('./helloRSocket');
 
 const argv = yargs.default
     .usage('$0 --host <host> --port <port>')
     .options({
         host: {default: '0.0.0.0', describe: 'server hostname.', type: 'string'},
-        port: {default: 8080, describe: 'server port.', type: 'string'},
+        port: {default: 7878, describe: 'server port.', type: 'string'},
         protocol: {
             default: 'tcp',
             describe: 'the protocol.',
@@ -26,16 +25,18 @@ const argv = yargs.default
             choices: ['client', 'server'],
         },
         operation: {
-            default: 'stream',
+            default: 'rs',
             describe: 'the operation to perform.',
-            choices: ['none', 'stream'],
+            choices: ['mp', 'fnf','rr','rs','rc'],
         },
         payload: {default: 'Hi!', describe: 'the payload to send.', type: 'string'},
     })
     .choices('protocol', ['ws', 'tcp'])
     .help().argv;
+
 const isClient = argv.mode === 'client';
 const side = isClient ? 'Client' : 'Server';
+const helloRSocket = new HelloRSocket(side);
 
 let run = (() => {
     let ref = asyncToGenerator(function* (options) {
@@ -48,8 +49,8 @@ let run = (() => {
             const deferred = new Deferred.default();
             const server = new rsocketCore.RSocketServer({
                 getRequestHandler: function (socket) {
-                    runOperation(socket, options);
-                    return new HelloRSocket(side);
+                    //helloRSocket.runOperation(socket, options);
+                    return helloRSocket;
                 },
                 transport: getServerTransport(options.protocol, connectOptions),
             });
@@ -63,7 +64,7 @@ let run = (() => {
             socket.connectionStatus().subscribe(function (status) {
                 console.log('Connection status:', status);
             });
-            return runOperation(socket, options);
+            return helloRSocket.runOperation(socket, options);
         }
     });
     return function run(_x) {
@@ -78,17 +79,6 @@ function getServerTransport(protocol, options) {
             return new rsocketTcpServer.default(Object.assign({}, options));
         case 'ws':
             return new rsocketWebsocketServer.default(Object.assign({}, options));
-    }
-}
-
-function doOperation(socket, operation, payload) {
-    switch (operation) {
-        case 'none':
-            return rsocketFlowable.Flowable.never();
-        case 'stream':
-        default:
-            console.log(`Requesting stream with payload: ${payload}`);
-            return socket.requestStream({data: payload, metadata: ''});
     }
 }
 
@@ -107,29 +97,6 @@ function getClientTransport(protocol, options) {
     }
 }
 
-function runOperation(socket, options) {
-    const deferred = new Deferred.default();
-    let subscription;
-    doOperation(socket, options.operation, options.payload).subscribe({
-        onComplete() {
-            console.log('onComplete()');
-            deferred.resolve();
-        },
-        onError(error) {
-            console.log('onError(%s)', error.message);
-            deferred.reject(error);
-        },
-        onNext(payload) {
-            console.log('onNext(%s)', payload.data);
-        },
-        onSubscribe(_subscription) {
-            subscription = _subscription;
-            subscription.request(rsocketCore.MAX_STREAM_ID);
-        },
-    });
-    return deferred.getPromise();
-}
-
 function connect(protocol, options) {
     const client = new rsocketCore.RSocketClient({
         setup: {
@@ -140,7 +107,7 @@ function connect(protocol, options) {
             // ms timeout if no keepalive response
             lifetime: 180000,
         },
-        responder: new HelloRSocket(side),
+        responder: helloRSocket,
         transport: getClientTransport(protocol, options),
     });
     return client.connect();
@@ -166,13 +133,12 @@ function asyncToGenerator(fn) {
                     );
                 }
             }
-
             return step('next');
         });
     };
 }
 
-function interopRequireDefault(obj) {
+function interopRequire(obj) {
     return obj && obj.__esModule ? obj : {default: obj};
 }
 
