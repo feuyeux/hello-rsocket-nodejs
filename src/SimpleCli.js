@@ -7,6 +7,7 @@ const rsocketTcpServer = interopRequire(require('rsocket-tcp-server'));
 const rsocketTcpClient = interopRequire(require('rsocket-tcp-client'));
 const yargs = interopRequire(require('yargs'));
 const ws = interopRequire(require('ws'));
+
 const HelloRSocket = require('./helloRSocket');
 
 const argv = yargs.default
@@ -25,18 +26,16 @@ const argv = yargs.default
             choices: ['client', 'server'],
         },
         operation: {
-            default: 'rs',
+            default: 'rr',
             describe: 'the operation to perform.',
-            choices: ['mp', 'fnf','rr','rs','rc'],
-        },
-        payload: {default: 'Hi!', describe: 'the payload to send.', type: 'string'},
+            choices: ['mp', 'fnf', 'rr', 'rs', 'rc'],
+        }
     })
     .choices('protocol', ['ws', 'tcp'])
     .help().argv;
 
 const isClient = argv.mode === 'client';
-const side = isClient ? 'Client' : 'Server';
-const helloRSocket = new HelloRSocket(side);
+const helloRSocket = new HelloRSocket();
 
 let run = (() => {
     let ref = asyncToGenerator(function* (options) {
@@ -62,7 +61,7 @@ let run = (() => {
             // $FlowFixMe
             const socket = yield connect(options.protocol, connectOptions);
             socket.connectionStatus().subscribe(function (status) {
-                console.log('Connection status:', status);
+                console.debug('Connection status:', status);
             });
             return helloRSocket.runOperation(socket, options);
         }
@@ -133,6 +132,7 @@ function asyncToGenerator(fn) {
                     );
                 }
             }
+
             return step('next');
         });
     };
@@ -140,6 +140,9 @@ function asyncToGenerator(fn) {
 
 function interopRequire(obj) {
     return obj && obj.__esModule ? obj : {default: obj};
+}
+
+console.debug = function () {
 }
 
 Promise.resolve(run(argv)).then(

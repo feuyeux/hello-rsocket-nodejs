@@ -30,6 +30,7 @@
     "start-tcp-responder": "node src/SimpleCli.js --mode=server --protocol=tcp",
     "start-ws-responder": "node src/SimpleCli.js --mode=server --protocol=ws",
     "send-tcp-request": "node src/SimpleCli.js --protocol=tcp \"$@\"",
-    "send-ws-request": "node src/SimpleCli.js --protocol=ws \"$@\""
+    "send-ws-request": "node src/SimpleCli.js --protocol=ws \"$@\"",
+    "test-flowable": "node test/helloFlowable.js"
   }
 }
